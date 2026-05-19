@@ -19,5 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('panic_disorder_web.urls')),
+    path('', include('fertilizer_recommend_web.urls')),
 ]
