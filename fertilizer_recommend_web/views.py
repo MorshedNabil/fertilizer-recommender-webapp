@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
+from .llm import build_fertilizer_advice
 from .ml_model.prediction import predict as predict_fertilizer
 
 # Create your views here.
@@ -23,13 +24,17 @@ def predict(request):
         
         # Pass dictionary to predict function; return a dictionary with prediction, confidence, and message
         result = predict_fertilizer(form_data)
+        llm_result = build_fertilizer_advice(form_data, result)
         
         # Return JSON response with prediction results
         return JsonResponse({
             'success': True,
             'prediction': result.get('prediction'),
             'confidence': result.get('confidence'),
-            'message': result.get('message')
+            'message': result.get('message'),
+            'llm_advice': llm_result.get('advice'),
+            'llm_status': llm_result.get('status'),
+            'llm_error': llm_result.get('error'),
         }, status=200)
     
     except Exception as e:

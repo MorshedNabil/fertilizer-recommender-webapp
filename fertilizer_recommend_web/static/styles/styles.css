@@ -200,7 +200,7 @@ select option:hover {
     border-radius: 8px;
     margin-top: 30px;
     margin-bottom: 20px;
-    overflow: hidden;
+    overflow: visible;
     animation: slideDown 0.4s ease-out;
     transition: all 0.3s ease;
 }
@@ -333,6 +333,51 @@ select option:hover {
     color: var(--text-dark);
     line-height: 1.6;
     margin: 0;
+    white-space: pre-line;
+}
+
+.llm-advice {
+    background: var(--white);
+    padding: 18px;
+    border-radius: 6px;
+    border-left: 4px solid var(--secondary-color);
+    margin-top: 16px;
+    overflow: visible;
+}
+
+.llm-advice.hidden {
+    display: none;
+}
+
+.llm-status {
+    color: var(--text-light);
+    font-size: 12px;
+    margin-top: 14px;
+}
+
+.advice-text {
+    display: grid;
+    gap: 8px;
+    white-space: normal;
+}
+
+.advice-text h3 {
+    color: var(--text-dark);
+    font-size: 15px;
+    line-height: 1.35;
+    margin: 10px 0 0;
+}
+
+.advice-text h3:first-child {
+    margin-top: 0;
+}
+
+.advice-text p {
+    color: var(--text-dark);
+    font-size: 15px;
+    line-height: 1.7;
+    margin: 0;
+    
 }
 
 /* Responsive Design */
