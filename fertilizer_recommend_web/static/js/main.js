@@ -72,6 +72,7 @@ function displayResult(data) {
         resultMessage.textContent = 'Your assessment has been processed successfully.';
     }
     // set llm advice
+    console.log('[LLM] status:', data.llm_status, '| error:', data.llm_error, '| advice:', data.llm_advice);
     if (data.llm_advice) {
         llmAdvice.innerHTML = formatAdviceText(data.llm_advice);
         llmAdviceBlock.classList.remove('hidden');
@@ -143,36 +144,16 @@ function getLlmStatusText(status, error) {
 
     return '';
 }
-// ================ Format the LLM advice text ==============
 function formatAdviceText(text) {
     return text
         .split(/\n+/)
         .map((line) => line.trim())
         .filter(Boolean)
         .map((line) => {
-            const cleanLine = line
-                .replace(/\*\*/g, '')
-                .replace(/^\d+\.\s*/, '');
-
-            if (/^(Recommendation|Why this fits|Practical caution)\b:?/i.test(cleanLine)) {
-                return '<h3>' + escapeHtml(cleanLine.replace(/:$/, '')) + '</h3>';
+            if (/^(Recommendation|Why this fits|Practical caution)\b:?/i.test(line)) {
+                return '<h3>' + line.replace(/:$/, '') + '</h3>';
             }
-
-            return '<p>' + escapeHtml(cleanLine) + '</p>';
+            return '<p>' + line + '</p>';
         })
         .join('');
-}
-
-function escapeHtml(value) {
-    return value.replace(/[&<>"']/g, (character) => {
-        const entities = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;'
-        };
-
-        return entities[character];
-    });
 }

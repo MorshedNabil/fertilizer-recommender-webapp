@@ -47,7 +47,7 @@ def build_fertilizer_advice(form_data, prediction_result):
             contents=prompt,
             config=types.GenerateContentConfig(
                 temperature=0.4,
-                max_output_tokens=700,
+                max_output_tokens=1200,
                 system_instruction=(
                     'You are an agricultural fertilizer assistant. Give clear, '
                     'practical, cautious guidance for farmers. Do not invent exact '
@@ -57,7 +57,7 @@ def build_fertilizer_advice(form_data, prediction_result):
             ),
         )
 
-        advice = (response.text or '').strip()
+        advice = _clean_markdown((response.text or '').strip())
         if not advice:
             return {
                 'advice': fallback_advice,
@@ -76,6 +76,20 @@ def build_fertilizer_advice(form_data, prediction_result):
             'status': 'failed',
             'error': str(exc),
         }
+
+
+def _clean_markdown(text):
+    import re
+    lines = []
+    for line in text.splitlines():
+        line = re.sub(r'^#+\s*', '', line)          # ## headings
+        line = re.sub(r'\*\*([^*]+)\*\*', r'\1', line)  # **bold**
+        line = re.sub(r'\*([^*]+)\*', r'\1', line)  # *italic*
+        line = re.sub(r'`([^`]+)`', r'\1', line)    # `code`
+        line = re.sub(r'^\d+\.\s*', '', line)        # 1. numbered list
+        line = re.sub(r'^[-*]\s+', '', line)         # - / * bullet
+        lines.append(line)
+    return '\n'.join(lines).strip()
 
 
 def _build_fallback_advice(form_data, prediction_result):
